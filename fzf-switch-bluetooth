@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+op=$((bluetoothctl devices | awk '{print $2 " " $3 " " $4}' ; ) | cat |  
+    fzf  --layout=reverse-list --border=rounded --border-label="Fuzzy Tooth" | awk '{print ($1)}')
+if [[ -z "$op" ]]; then
+    exit
+fi
+connected=$(bluetoothctl devices Connected | grep $op)
+status=""
+if [[ -z "$connected" ]]; then
+    bluetoothctl connect $op
+    status="connected"
+else
+    bluetoothctl disconnect $op
+    status="disconnected"
+fi

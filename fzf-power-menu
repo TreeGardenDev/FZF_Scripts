@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+op=$( echo -e " Poweroff\n Reboot\n Suspend\n Hibernate\n Logout" | fzf --layout=reverse-list --border=rounded --border-label="Fuzzy Power"  | awk '{print tolower($2)}' )
+
+case $op in 
+        poweroff)
+                ;&
+        reboot)
+                ;&
+        suspend)
+                ;&
+        hibernate)
+                systemctl $op
+                ;;
+        logout)
+                swaymsg exit
+                ;;
+esac

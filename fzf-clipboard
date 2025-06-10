@@ -1,0 +1,11 @@
+#!/bin/sh
+
+op=$( cliphist list | fzf  --layout=reverse-list --border=rounded --border-label="Fuzzy Clipboard") 
+if [ -z "$op" ]; then
+    echo "No selection made."
+    exit 0
+fi
+
+ #cliphist decode | wl-copy )
+
+ res=$(echo "$op" | cliphist decode | wl-copy)

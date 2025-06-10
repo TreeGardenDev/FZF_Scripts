@@ -1,0 +1,15 @@
+#!/bin/bash
+
+windows=$(swaymsg -t get_workspaces | jq -r '.[] | "\(.name) \(.representation) \(.num) \(.output) Visible:\(.visible) Current:\(.focused)"')
+
+selected=$(echo "$windows" | fzf  --layout=reverse-list --border=rounded --border-label="Fuzzy Windows" | awk '{print $1}')
+if [ -z "$selected" ]; then
+    echo "No selection made."
+    exit 1
+fi
+echo "Selected window: $selected"
+
+tree=$(swaymsg -t get_tree | jq -r --arg selected "$selected" '.nodes | .[] | .nodes | .[] | select(.name == $selected) |  .nodes | .[] | "\(.id?) \(.name?)"' | awk '{print $1}' | head -n 1) 
+
+echo "Selected window ID: $tree"
+swaymsg -q [con_id="$tree"] focus

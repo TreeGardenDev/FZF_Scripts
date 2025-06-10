@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+op=$((pactl list sinks | rg "Name" | awk '{print $2}' ; ) | cat |  
+    fzf  --layout=reverse-list --border=rounded --border-label="Fuzzy Sound" | awk '{print ($1)}')
+
+if [[ -z "$op" ]]; then
+    exit 1
+fi
+
+pactl set-default-sink $op

@@ -1,0 +1,26 @@
+#!/usr/bin/sh
+
+
+op=$(
+timedatectl | sed -n '1 p' | awk '{print $3,$4, $5}';
+acpi --battery | awk '{print  $3, $4, $5}' ; 
+echo "CPU Usage: "$(iostat -c | awk '{print $1+$3}'  | sed -n '4 p')"%" ; 
+echo "CPU Freq Scale" $(lscpu | rg "scaling MHz" | awk '{print $4}');
+echo "CPU Temp "$(sensors | rg -A1 "Adapter: ACPI" | rg "temp1" | awk '{print $2}') ; 
+echo "Memory Used: "$(free -h | rg "Mem:" | awk '{print $3}'); 
+echo "Brightness: "$(light -G)"%";
+echo "Volume : $(pactl list sinks | rg front-left: | awk '{print $5}' | tail -1)";
+iwconfig wlan0 | sed -n '1 p' |awk '{print $4}' ;
+echo "Workspace Switcher";) 
+
+return=$(echo "$op" | fzf --layout=reverse-list --border=rounded --border-label='Fuzzy System')
+
+if [ -z "$return" ]; then
+    exit 0
+elif echo "$return"=="Workspace Switcher"; then
+    "$HOME"/.local/bin/fzf/fzf-changeworkspace
+    exit 0
+fi
+
+
+

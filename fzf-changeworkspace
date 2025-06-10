@@ -1,0 +1,20 @@
+#!/bin/sh
+
+op=$(swaymsg -t get_tree | jq -r '
+  def windows:
+    if (.nodes // []) != [] then
+     (
+       (.nodes // [] | map(windows) | add) +
+       (.floating_nodes // [] | map(windows) | add)
+     )
+    elif .name != null then
+      [ {id: .id, name: .name} ]
+    else
+      []
+    end;
+  .nodes // [] | map(windows) | add | map("\(.id) \(.name)") | .[]
+' | fzf --layout=reverse-list --border=rounded --border-label='Fuzzy Switcher')
+
+result=$(echo "$op" | awk '{print $1}')
+
+swaymsg -q [con_id="$result"] focus

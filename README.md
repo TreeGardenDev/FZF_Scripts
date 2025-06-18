@@ -1,6 +1,6 @@
 # FZF_Scripts
 
-# Collection of some hacky-ass fzf scripts. Intended for Sway originally. Assume FZF and Ripgrep as Dependencies.
+# Collection of some hacky-ass fzf scripts. Intended for Sway originally. Assume FZF and Ripgrep as Dependencies. Still a WIP.
 
 ## Script list/description:
 
